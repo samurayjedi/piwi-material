@@ -63,19 +63,15 @@ export default abstract class AbstractOverlay {
 
     if (this.isOpened) {
       for (let i = 0; i < this.pathsCount; i++) {
-        newPatchs[i](
-          this.updatePath(
-            Date.now() - (this.timeStart + this.delayPerPath * i),
-          ),
+        newPatchs[i] = this.updatePath(
+          Date.now() - (this.timeStart + this.delayPerPath * i),
         );
       }
     } else {
       for (let i = 0; i < this.pathsCount; i++) {
-        newPatchs[i](
-          this.updatePath(
-            Date.now() -
-              (this.timeStart + this.delayPerPath * (this.pathsCount - i - 1)),
-          ),
+        newPatchs[i] = this.updatePath(
+          Date.now() -
+            (this.timeStart + this.delayPerPath * (this.pathsCount - i - 1)),
         );
       }
     }
