@@ -1,9 +1,9 @@
-import AbstractOverlay, { DrawerController } from './AbstractOverlay';
+import AbstractOverlay, { Setter } from './AbstractOverlay';
 import { cubicInOut, cubicOut } from '../Ease';
 
 export default class WavesOverlay extends AbstractOverlay {
-  constructor(controller: DrawerController) {
-    super(controller);
+  constructor(setter: Setter) {
+    super(3, setter);
     this.numPoints = 2;
     this.duration = 600;
     this.delayPointsMax = 0;

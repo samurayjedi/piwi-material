@@ -51,6 +51,7 @@ function Drawer({
         <DrawerOverlay
           ref={overlayRef}
           effect={effect}
+          colors={['#1d1d1f', '#413f46', '#cccccc']}
           onOpen={onOpenOverlay}
           onClose={onCloseOverlay}
         />

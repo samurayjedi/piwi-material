@@ -1,31 +1,34 @@
-import React, { useState, useImperativeHandle, useMemo } from 'react';
+import React, {
+  useState,
+  useImperativeHandle,
+  useMemo,
+  useEffect,
+} from 'react';
 import styled from '@emotion/native';
 import Svg, { Path } from 'react-native-svg';
 import WavesOverlay from './effects/WavesOverlay';
 import CascadeOverlay from './effects/CascadeOverlay';
 
 const DrawerOverlay = React.forwardRef<OverlayInterface, OverlayProps>(
-  ({ onClose = () => {}, onOpen = () => {}, effect = 'waves' }, ref) => {
-    const [d1, setD1] = useState('');
-    const [d2, setD2] = useState('');
-    const [d3, setD3] = useState('');
+  (
+    { effect = 'waves', colors, onOpen = () => {}, onClose = () => {} },
+    ref,
+  ) => {
+    const [paths, setPaths] = useState<string[]>([]);
 
     const overlays = useMemo(() => {
-      const Instance = (() => {
-        switch (effect) {
-          case 'cascade':
-            return CascadeOverlay;
-        }
+      switch (effect) {
+        case 'cascade':
+          return new CascadeOverlay(setPaths);
+      }
 
-        return WavesOverlay;
-      })() as any;
+      return new WavesOverlay(setPaths);
+    }, [effect]);
 
-      return new Instance({
-        setD: [setD1, setD2, setD3],
-        onOpen,
-        onClose,
-      });
-    }, [effect, onOpen, onClose]);
+    useEffect(() => {
+      overlays.setOnOpen(onOpen);
+      overlays.setOnClose(onClose);
+    }, [onOpen, onClose]);
 
     useImperativeHandle(ref, () => ({
       overlays,
@@ -33,9 +36,11 @@ const DrawerOverlay = React.forwardRef<OverlayInterface, OverlayProps>(
 
     return (
       <Overlay viewBox="0 0 100 100" preserveAspectRatio="none">
-        <Path fill="#1d1d1f" d={d1} />
-        <Path fill="#413f46" d={d2} />
-        <Path fill="#cccccc" d={d3} />
+        {paths.map((path, index) => {
+          const color = colors[index] ?? '#000';
+
+          return <Path key={`path-${color}`} fill={color} d={path} />;
+        })}
       </Overlay>
     );
   },
@@ -49,6 +54,7 @@ const Overlay = styled(Svg)({
 
 export interface OverlayProps {
   effect?: 'waves' | 'cascade';
+  colors: string[];
   onOpen?: () => void;
   onClose?: () => void;
 }

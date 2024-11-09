@@ -1,9 +1,9 @@
-import AbstractOverlay, { DrawerController } from './AbstractOverlay';
+import AbstractOverlay, { Setter } from './AbstractOverlay';
 import { cubicInOut } from '../Ease';
 
 export default class CascadeOverlay extends AbstractOverlay {
-  constructor(controller: DrawerController) {
-    super(controller);
+  constructor(setter: Setter) {
+    super(3, setter);
     this.numPoints = 18;
     this.duration = 600;
     this.delayPointsMax = 300;
