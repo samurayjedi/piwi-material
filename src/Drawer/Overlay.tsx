@@ -23,6 +23,8 @@ const DrawerOverlay = React.forwardRef<OverlayInterface, OverlayProps>(
       overlays,
     }));
 
+    console.log('testing!!!');
+
     return (
       <Overlay viewBox="0 0 100 100" preserveAspectRatio="none">
         <Path fill="#1d1d1f" d={d1} />

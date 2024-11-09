@@ -1,47 +1,37 @@
-import { cubicInOut, cubicOut } from './Ease';
+import { cubicInOut, cubicOut } from '../Ease';
 
-export default class ShapeOverlays {
-  controller: DrawerController;
+export default abstract class AbstractOverlay {
+  controller!: DrawerController;
 
-  numPoints: number;
+  numPoints!: number;
 
-  duration: number;
+  duration!: number;
 
-  delayPointsArray: Array<number>;
+  delayPointsArray!: Array<number>;
 
-  delayPointsMax: number;
+  delayPointsMax!: number;
 
-  delayPerPath: number;
+  delayPerPath!: number;
 
-  timeStart: number;
+  timeStart!: number;
 
-  isAnimating: boolean;
+  isAnimating!: boolean;
 
-  isOpened: boolean;
+  isOpened!: boolean;
 
-  constructor(controller: DrawerController) {
-    this.controller = controller;
-    this.numPoints = 2;
-    this.duration = 600;
-    this.delayPointsArray = [];
-    this.delayPointsMax = 0;
-    this.delayPerPath = 200;
-    this.timeStart = Date.now();
-    this.isAnimating = false;
-    this.isOpened = false;
-  }
+  constructor(controller: DrawerController) {}
 
   toggle() {
     this.isAnimating = true;
     this.timeStart = Date.now();
+    for (let i = 0; i < this.numPoints; i++) {
+      this.delayPointsArray[i] = 0;
+    }
     if (!this.isOpened) {
       this.isOpened = true;
       this.controller.onOpen();
     } else {
       this.isOpened = false;
-    }
-    for (let i = 0; i < this.numPoints; i++) {
-      this.delayPointsArray[i] = 0;
     }
     this.renderLoop();
   }
