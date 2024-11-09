@@ -1,0 +1,43 @@
+{
+  "name": "@samurayjedi/piwi-material",
+  "version": "1.0.0",
+  "description": "Several effects/components that i often use in my react native projects.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samurayjedi/native-chess.git"
+  },
+  "keywords": [
+    "material"
+  ],
+  "author": "samurayjedi",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/samurayjedi/native-chess/issues"
+  },
+  "homepage": "https://github.com/samurayjedi/native-chess#readme",
+  "dependencies": {
+    "@emotion/native": "^11.11.0",
+    "@emotion/react": "^11.11.4",
+    "@expo/vector-icons": "^14.0.4",
+    "@react-spring/native": "^9.7.5",
+    "expo-constants": "^16.0.2",
+    "lodash": "^4.17.21",
+    "react": "18.2.0",
+    "react-native-svg": "^15.3.0"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.17.13",
+    "@types/react": "^18.3.12",
+    "@typescript-eslint/eslint-plugin": "^8.12.2",
+    "@typescript-eslint/parser": "^8.12.2",
+    "eslint": "^8.57.1",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "prettier": "^3.3.3"
+  }
+}
