@@ -10,10 +10,13 @@ import Constants from 'expo-constants';
 import IconButton from '../IconButton';
 import DrawerOverlay, { OverlayInterface, OverlayProps } from './Overlay';
 
+// ['#1d1d1f', '#413f46', '#cccccc']
+
 function Drawer({
   open,
   items,
   effect = 'waves',
+  colors,
   onClose,
   ...props
 }: DrawerProps) {
@@ -51,7 +54,7 @@ function Drawer({
         <DrawerOverlay
           ref={overlayRef}
           effect={effect}
-          colors={['#1d1d1f', '#413f46', '#cccccc']}
+          colors={colors}
           onOpen={onOpenOverlay}
           onClose={onCloseOverlay}
         />
@@ -80,6 +83,7 @@ export interface DrawerProps extends ViewProps {
   items: [string, string][];
   onClose?: () => void;
   effect?: OverlayProps['effect'];
+  colors: OverlayProps['colors'];
 }
 
 export default Drawer;

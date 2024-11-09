@@ -8,6 +8,7 @@ import styled from '@emotion/native';
 import Svg, { Path } from 'react-native-svg';
 import WavesOverlay from './effects/WavesOverlay';
 import CascadeOverlay from './effects/CascadeOverlay';
+import FourWavesOverlay from './effects/FourWavesOverlay';
 
 const DrawerOverlay = React.forwardRef<OverlayInterface, OverlayProps>(
   (
@@ -20,6 +21,8 @@ const DrawerOverlay = React.forwardRef<OverlayInterface, OverlayProps>(
       switch (effect) {
         case 'cascade':
           return new CascadeOverlay(setPaths);
+        case 'four-waves':
+          return new FourWavesOverlay(setPaths);
       }
 
       return new WavesOverlay(setPaths);
@@ -53,7 +56,7 @@ const Overlay = styled(Svg)({
 });
 
 export interface OverlayProps {
-  effect?: 'waves' | 'cascade';
+  effect?: 'waves' | 'cascade' | 'four-waves';
   colors: string[];
   onOpen?: () => void;
   onClose?: () => void;
