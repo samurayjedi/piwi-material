@@ -1,7 +1,7 @@
 import React, { useState, useImperativeHandle, useMemo } from 'react';
 import styled from '@emotion/native';
 import Svg, { Path } from 'react-native-svg';
-import ShapeOverlays from './ShapeOverlays';
+import CurvesOverlay from './effects/CurvesOverlay';
 
 const DrawerOverlay = React.forwardRef<OverlayInterface, OverlayProps>(
   ({ onClose = () => {}, onOpen = () => {} }, ref) => {
@@ -11,7 +11,7 @@ const DrawerOverlay = React.forwardRef<OverlayInterface, OverlayProps>(
 
     const overlays = useMemo(
       () =>
-        new ShapeOverlays({
+        new CurvesOverlay({
           setD: [setD1, setD2, setD3],
           onOpen,
           onClose,
@@ -47,7 +47,7 @@ interface OverlayProps {
 }
 
 export interface OverlayInterface {
-  overlays: ShapeOverlays;
+  overlays: CurvesOverlay;
 }
 
 export default DrawerOverlay;
