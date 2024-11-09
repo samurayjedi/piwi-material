@@ -1,4 +1,4 @@
-import type { PiwiTheme } from './material/styles/theme';
+import type { PiwiTheme } from './src/styles/theme';
 
 declare module '@emotion/react' {
   export interface Theme extends PiwiTheme {}

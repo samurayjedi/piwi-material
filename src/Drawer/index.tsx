@@ -8,9 +8,15 @@ import {
 } from 'react-native';
 import Constants from 'expo-constants';
 import IconButton from '../IconButton';
-import DrawerOverlay, { OverlayInterface } from './Overlay';
+import DrawerOverlay, { OverlayInterface, OverlayProps } from './Overlay';
 
-function Drawer({ open, items, onClose, ...props }: DrawerProps) {
+function Drawer({
+  open,
+  items,
+  effect = 'waves',
+  onClose,
+  ...props
+}: DrawerProps) {
   const overlayRef = useRef<OverlayInterface>(null);
   const [display, setDisplay] = useState(false);
 
@@ -44,6 +50,7 @@ function Drawer({ open, items, onClose, ...props }: DrawerProps) {
       <Wrapper>
         <DrawerOverlay
           ref={overlayRef}
+          effect={effect}
           onOpen={onOpenOverlay}
           onClose={onCloseOverlay}
         />
@@ -67,10 +74,11 @@ function Drawer({ open, items, onClose, ...props }: DrawerProps) {
   );
 }
 
-interface DrawerProps extends ViewProps {
+export interface DrawerProps extends ViewProps {
   open: boolean;
   items: [string, string][];
   onClose?: () => void;
+  effect?: OverlayProps['effect'];
 }
 
 export default Drawer;

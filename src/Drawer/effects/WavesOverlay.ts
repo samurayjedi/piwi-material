@@ -1,7 +1,7 @@
 import AbstractOverlay, { DrawerController } from './AbstractOverlay';
 import { cubicInOut, cubicOut } from '../Ease';
 
-export default class CurvesOverlay extends AbstractOverlay {
+export default class WavesOverlay extends AbstractOverlay {
   constructor(controller: DrawerController) {
     super(controller);
     this.numPoints = 2;

@@ -1,29 +1,35 @@
 import React, { useState, useImperativeHandle, useMemo } from 'react';
 import styled from '@emotion/native';
 import Svg, { Path } from 'react-native-svg';
-import CurvesOverlay from './effects/CurvesOverlay';
+import WavesOverlay from './effects/WavesOverlay';
+import CascadeOverlay from './effects/CascadeOverlay';
 
 const DrawerOverlay = React.forwardRef<OverlayInterface, OverlayProps>(
-  ({ onClose = () => {}, onOpen = () => {} }, ref) => {
+  ({ onClose = () => {}, onOpen = () => {}, effect = 'waves' }, ref) => {
     const [d1, setD1] = useState('');
     const [d2, setD2] = useState('');
     const [d3, setD3] = useState('');
 
-    const overlays = useMemo(
-      () =>
-        new CurvesOverlay({
-          setD: [setD1, setD2, setD3],
-          onOpen,
-          onClose,
-        }),
-      [onClose],
-    );
+    const overlays = useMemo(() => {
+      const Instance = (() => {
+        switch (effect) {
+          case 'cascade':
+            return CascadeOverlay;
+        }
+
+        return WavesOverlay;
+      })() as any;
+
+      return new Instance({
+        setD: [setD1, setD2, setD3],
+        onOpen,
+        onClose,
+      });
+    }, [effect, onOpen, onClose]);
 
     useImperativeHandle(ref, () => ({
       overlays,
     }));
-
-    console.log('testing!!!');
 
     return (
       <Overlay viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -41,13 +47,14 @@ const Overlay = styled(Svg)({
   elevation: -1,
 });
 
-interface OverlayProps {
+export interface OverlayProps {
+  effect?: 'waves' | 'cascade';
   onOpen?: () => void;
   onClose?: () => void;
 }
 
 export interface OverlayInterface {
-  overlays: CurvesOverlay;
+  overlays: WavesOverlay;
 }
 
 export default DrawerOverlay;
