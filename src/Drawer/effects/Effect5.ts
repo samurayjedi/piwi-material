@@ -1,18 +1,18 @@
 import AbstractOverlay, { Setter } from './AbstractOverlay';
-import { sineOut, exponentialInOut } from '../Ease';
+import { cubicInOut } from '../Ease';
 
-export default class Effect4 extends AbstractOverlay {
+export default class Effect5 extends AbstractOverlay {
   constructor(setter: Setter) {
     super(2, setter);
-    this.numPoints = 4;
-    this.duration = 1000;
-    this.delayPointsMax = 0;
-    this.delayPerPath = 60;
+    this.numPoints = 85;
+    this.duration = 500;
+    this.delayPointsMax = 300;
+    this.delayPerPath = 150;
   }
 
   toggle() {
     for (var i = 0; i < this.numPoints; i++) {
-      this.delayPointsArray[i] = 0;
+      this.delayPointsArray[i] = Math.random() * this.delayPointsMax;
     }
 
     super.toggle();
@@ -21,10 +21,9 @@ export default class Effect4 extends AbstractOverlay {
   updatePath(time: number) {
     const points = [];
     for (var i = 0; i < this.numPoints; i++) {
-      const thisEase = i % 2 === 1 ? sineOut : exponentialInOut;
       points[i] =
         (1 -
-          thisEase(
+          cubicInOut(
             Math.min(
               Math.max(time - this.delayPointsArray[i], 0) / this.duration,
               1,
@@ -41,7 +40,6 @@ export default class Effect4 extends AbstractOverlay {
       str += `C ${points[i]} ${cp} ${points[i + 1]} ${cp} ${points[i + 1]} ${p} `;
     }
     str += this.isOpened ? `H 100 V 0` : `H 0 V 0`;
-
     return str;
   }
 }

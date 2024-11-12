@@ -10,6 +10,7 @@ import Effect1 from './effects/Effect1';
 import Effect2 from './effects/Effect2';
 import Effect3 from './effects/Effect3';
 import Effect4 from './effects/Effect4';
+import Effect5 from './effects/Effect5';
 
 const DrawerOverlay = React.forwardRef<OverlayInterface, OverlayProps>(
   ({ effect = 3, colors, onOpen = () => {}, onClose = () => {} }, ref) => {
@@ -25,6 +26,8 @@ const DrawerOverlay = React.forwardRef<OverlayInterface, OverlayProps>(
           return new Effect3(setPaths);
         case 4:
           return new Effect4(setPaths);
+        case 5:
+          return new Effect5(setPaths);
       }
 
       throw new Error('Invalid effect.');
@@ -58,7 +61,7 @@ const Overlay = styled(Svg)({
 });
 
 export interface OverlayProps {
-  effect?: 1 | 2 | 3 | 4;
+  effect?: 1 | 2 | 3 | 4 | 5;
   colors: string[];
   onOpen?: () => void;
   onClose?: () => void;
