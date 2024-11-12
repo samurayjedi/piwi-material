@@ -1,7 +1,7 @@
 import AbstractOverlay, { Setter } from './AbstractOverlay';
 import { cubicInOut, cubicOut } from '../Ease';
 
-export default class WavesOverlay extends AbstractOverlay {
+export default class Effect3 extends AbstractOverlay {
   constructor(setter: Setter) {
     super(3, setter);
     this.numPoints = 2;

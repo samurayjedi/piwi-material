@@ -15,7 +15,7 @@ import DrawerOverlay, { OverlayInterface, OverlayProps } from './Overlay';
 function Drawer({
   open,
   items,
-  effect = 'waves',
+  effect = 3,
   colors,
   onClose,
   ...props

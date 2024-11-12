@@ -6,26 +6,28 @@ import React, {
 } from 'react';
 import styled from '@emotion/native';
 import Svg, { Path } from 'react-native-svg';
-import WavesOverlay from './effects/WavesOverlay';
-import CascadeOverlay from './effects/CascadeOverlay';
-import FourWavesOverlay from './effects/FourWavesOverlay';
+import Effect1 from './effects/Effect1';
+import Effect2 from './effects/Effect2';
+import Effect3 from './effects/Effect3';
+import Effect4 from './effects/Effect4';
 
 const DrawerOverlay = React.forwardRef<OverlayInterface, OverlayProps>(
-  (
-    { effect = 'waves', colors, onOpen = () => {}, onClose = () => {} },
-    ref,
-  ) => {
+  ({ effect = 3, colors, onOpen = () => {}, onClose = () => {} }, ref) => {
     const [paths, setPaths] = useState<string[]>([]);
 
     const overlays = useMemo(() => {
       switch (effect) {
-        case 'cascade':
-          return new CascadeOverlay(setPaths);
-        case 'four-waves':
-          return new FourWavesOverlay(setPaths);
+        case 1:
+          return new Effect1(setPaths);
+        case 2:
+          return new Effect2(setPaths);
+        case 3:
+          return new Effect3(setPaths);
+        case 4:
+          return new Effect4(setPaths);
       }
 
-      return new WavesOverlay(setPaths);
+      throw new Error('Invalid effect.');
     }, [effect]);
 
     useEffect(() => {
@@ -56,14 +58,14 @@ const Overlay = styled(Svg)({
 });
 
 export interface OverlayProps {
-  effect?: 'waves' | 'cascade' | 'four-waves';
+  effect?: 1 | 2 | 3 | 4;
   colors: string[];
   onOpen?: () => void;
   onClose?: () => void;
 }
 
 export interface OverlayInterface {
-  overlays: WavesOverlay;
+  overlays: Effect1 | Effect2 | Effect3 | Effect4;
 }
 
 export default DrawerOverlay;
