@@ -22,11 +22,15 @@ const PiwiAppBar = styled.View<AppBarProps>(({ theme, color = 'primary' }) => ({
   marginLeft: -5,
   height: 78,
   // bottom shadow
-  shadowColor: '#000',
-  shadowOffset: { width: 0, height: 1 },
-  shadowOpacity: 0.8,
-  shadowRadius: 1,
-  elevation: 5,
+  ...(color === 'transparent'
+    ? {}
+    : {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.8,
+        shadowRadius: 1,
+        elevation: 5,
+      }),
 }));
 
 const PiwiStatusBar = styled.View({
