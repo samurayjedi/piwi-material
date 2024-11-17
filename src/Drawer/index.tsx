@@ -117,6 +117,6 @@ const Glue = styled.View({
   flex: 1,
 });
 
-interface Ref {
+export interface Ref {
   ref: React.RefObject<OverlayInterface>;
 }
