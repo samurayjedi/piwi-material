@@ -8,16 +8,7 @@ import {
 import Constants from 'expo-constants';
 import DrawerOverlay, { OverlayInterface, OverlayProps } from './Overlay';
 
-// ['#1d1d1f', '#413f46', '#cccccc']
-
-function Drawer({
-  open,
-  items,
-  effect = 3,
-  colors,
-  onClose,
-  ...props
-}: DrawerProps) {
+function Drawer({ open, items, effect = 3, colors, ...props }: DrawerProps) {
   const overlayRef = useRef<OverlayInterface>(null);
   const [display, setDisplay] = useState(false);
 
@@ -35,14 +26,6 @@ function Drawer({
     }
   }, [open]);
 
-  const onPressBack = useCallback(() => {
-    if (overlayRef.current && !overlayRef.current.overlays.isAnimating) {
-      if (onClose) {
-        onClose();
-      }
-      overlayRef.current.overlays.toggle();
-    }
-  }, []);
   const onOpenOverlay = useCallback(() => setDisplay(true), []);
   const onCloseOverlay = useCallback(() => setDisplay(false), []);
 
