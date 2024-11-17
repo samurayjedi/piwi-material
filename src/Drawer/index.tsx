@@ -1,13 +1,11 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import styled from '@emotion/native';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {
   ViewProps,
   TouchableWithoutFeedback,
   TouchableWithoutFeedbackProps,
 } from 'react-native';
 import Constants from 'expo-constants';
-import IconButton from '../IconButton';
 import DrawerOverlay, { OverlayInterface, OverlayProps } from './Overlay';
 
 // ['#1d1d1f', '#413f46', '#cccccc']
@@ -60,12 +58,6 @@ function Drawer({
         />
         {open && (
           <Content>
-            <IconButton
-              onPress={onPressBack}
-              style={{ alignSelf: 'flex-start' }}
-            >
-              <FontAwesome name="arrow-left" color="#ffffff" />
-            </IconButton>
             <Glue />
             {items.map(([key, label]) => (
               <Item key={key}>{label}</Item>
