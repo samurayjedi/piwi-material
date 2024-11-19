@@ -6,6 +6,7 @@ import React, {
   useImperativeHandle,
 } from 'react';
 import styled from '@emotion/native';
+import { useSprings, animated } from '@react-spring/native';
 import {
   ViewProps,
   TouchableWithoutFeedback,
@@ -53,9 +54,7 @@ export default React.forwardRef<Ref, DrawerProps>(
           {open && (
             <Content>
               <Glue />
-              {items.map(([key, label]) => (
-                <Item key={key}>{label}</Item>
-              ))}
+              <Items open={open} items={items} />
               <Glue />
             </Content>
           )}
@@ -64,6 +63,56 @@ export default React.forwardRef<Ref, DrawerProps>(
     );
   },
 );
+
+function Items({
+  open,
+  items,
+}: {
+  open: boolean;
+  items: DrawerProps['items'];
+}) {
+  const springs = useSprings(
+    items.length,
+    items.map((v, i) =>
+      i % 2 === 0
+        ? {
+            x: !open ? 100 : 0,
+            rotate: !open ? 10 : 0,
+            scale: !open ? 0.5 : 0,
+            o: !open ? 0 : 1,
+          }
+        : {
+            x: !open ? 100 : 0,
+            rotate: !open ? -10 : 0,
+            scale: !open ? 0.5 : 0,
+            o: !open ? 0 : 1,
+          },
+    ),
+  );
+
+  return (
+    <>
+      {springs.map((v, i) => {
+        const [key, label] = items[i];
+
+        return (
+          <animated.View
+            style={{
+              opacity: v.o.to((o) => o),
+              transform: [
+                { translateX: v.x.to((x) => x) },
+                { rotate: v.rotate.to((r) => `${r}deg`) },
+                { scale: v.scale.to((s) => s) },
+              ],
+            }}
+          >
+            <Item>{label}</Item>
+          </animated.View>
+        );
+      })}
+    </>
+  );
+}
 
 export interface DrawerProps extends ViewProps {
   open: boolean;
