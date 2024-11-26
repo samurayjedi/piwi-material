@@ -6,7 +6,7 @@ import React, {
   useImperativeHandle,
 } from 'react';
 import styled from '@emotion/native';
-import { useSprings, animated } from '@react-spring/native';
+import { useSprings, animated, config } from '@react-spring/native';
 import {
   ViewProps,
   TouchableWithoutFeedback,
@@ -51,13 +51,11 @@ export default React.forwardRef<Ref, DrawerProps>(
             onOpen={onOpenOverlay}
             onClose={onCloseOverlay}
           />
-          {open && (
-            <Content>
-              <Glue />
-              <Items open={open} items={items} />
-              <Glue />
-            </Content>
-          )}
+          <Content>
+            <Glue />
+            <Items open={open} items={items} effect={effect} />
+            <Glue />
+          </Content>
         </Wrapper>
       </Root>
     );
@@ -67,44 +65,105 @@ export default React.forwardRef<Ref, DrawerProps>(
 function Items({
   open,
   items,
+  effect,
 }: {
   open: boolean;
   items: DrawerProps['items'];
+  effect: DrawerProps['effect'];
 }) {
-  const springs = useSprings(
+  const [springs, api] = useSprings(
     items.length,
-    items.map((v, i) =>
-      i % 2 === 0
-        ? {
-            x: !open ? 100 : 0,
-            rotate: !open ? 10 : 0,
-            scale: !open ? 0.5 : 0,
+    (i) => {
+      switch (effect) {
+        case 1:
+        case 3:
+        case 6:
+          return {
             o: !open ? 0 : 1,
-          }
-        : {
-            x: !open ? 100 : 0,
-            rotate: !open ? -10 : 0,
-            scale: !open ? 0.5 : 0,
+            y: !open ? (effect !== 6 ? -100 : 100) : 0,
+            delay: open ? 500 + 70 * i : 70 * i,
+          };
+        case 2:
+          return {
             o: !open ? 0 : 1,
-          },
-    ),
+            y: !open ? -100 : 0,
+            rotate: !open ? (i % 2 === 0 ? 10 : -10) : 0,
+            delay: open ? 500 + 70 * i : 70 * i,
+          };
+        case 4:
+          return {
+            o: !open ? 0 : 1,
+            x: !open ? 100 : 0,
+            delay: open ? 500 : 0,
+            config: !open ? config.wobbly : config.default,
+          };
+        case 5:
+          return {
+            x: !open ? 100 : 0,
+            rotate: !open ? (i % 2 === 0 ? 10 : -10) : 0,
+            scale: !open ? 0.3 : 1,
+            o: !open ? 0 : 1,
+            delay: open ? 500 : 0,
+          };
+        default:
+          return { o: !open ? 0 : 1 };
+      }
+    },
+    [open],
   );
+
+  useEffect(() => {
+    api.start();
+  }, []);
 
   return (
     <>
-      {springs.map((v, i) => {
+      {springs.map((spring, i) => {
+        const v = spring as any;
         const [key, label] = items[i];
 
         return (
           <animated.View
-            style={{
-              opacity: v.o.to((o) => o),
-              transform: [
-                { translateX: v.x.to((x) => x) },
-                { rotate: v.rotate.to((r) => `${r}deg`) },
-                { scale: v.scale.to((s) => s) },
-              ],
-            }}
+            key={key}
+            style={(() => {
+              const base = {
+                opacity: v.o.to((o: number) => o),
+              };
+
+              switch (effect) {
+                case 1:
+                case 3:
+                case 6:
+                  return {
+                    ...base,
+                    transform: [{ translateY: v.y.to((y: number) => y) }],
+                  };
+                case 2:
+                  return {
+                    ...base,
+                    transform: [
+                      { translateY: v.y.to((y: number) => y) },
+                      { rotate: v.rotate.to((r: number) => `${r}deg`) },
+                    ],
+                  };
+                case 4:
+                  return {
+                    ...base,
+                    transform: [{ translateX: v.x.to((x: number) => x) }],
+                  };
+                case 5:
+                  return {
+                    ...base,
+                    transform: [
+                      { translateX: v.x.to((x: number) => x) },
+                      { rotate: v.rotate.to((r: number) => `${r}deg`) },
+                      { scale: v.scale.to((s: number) => s) },
+                    ],
+                  };
+                default:
+                  return base;
+              }
+            })()}
           >
             <Item>{label}</Item>
           </animated.View>
