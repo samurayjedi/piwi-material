@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import { ViewProps, Dimensions, View } from 'react-native';
 import Constants from 'expo-constants';
 import { Theme } from '@emotion/react';
@@ -36,23 +37,34 @@ const PiwiAppBar = styled.View<AppBarProps>(({ theme, color = 'primary' }) => ({
 const PiwiStatusBar = styled.View({
   width: '100%',
   height: Constants.statusBarHeight,
-  backgroundColor: 'rgba(52, 52, 52, .4)',
+  backgroundColor: 'rgba(52, 52, 52, .3)',
 });
 
 export interface AppBarProps extends ViewProps {
-  color?: 'default' | 'primary' | 'secondary' | 'transparent';
+  color?:
+    | 'default'
+    | 'primary'
+    | 'primary.dark'
+    | 'primary.light'
+    | 'secondary'
+    | 'secondary.dark'
+    | 'secondary.light'
+    | 'transparent';
 }
 
 export const getColor = (theme: Theme, color: AppBarProps['color']) => {
   switch (color) {
+    case 'transparent':
+      return 'rgba(52, 52, 52, 0)';
     case 'primary':
     case 'secondary':
       return theme.palette[color].main;
-    case 'transparent':
-      return 'rgba(52, 52, 52, 0)';
+    case 'default':
+    case undefined:
+      return theme.palette.background.default;
   }
 
-  return theme.palette.common.white;
+  return _.get(theme.palette, color);
 };
 
 function hexToRgb(hex: string) {

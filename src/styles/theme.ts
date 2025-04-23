@@ -69,7 +69,10 @@ const PIWI_THEME = {
       background: '#400000', // dark theme: #40ffff
       opacity: 0.22,
     },
-    paper: '#ffffff',
+    background: {
+      paper: '#fff',
+      default: '#fff',
+    },
     divider: 'rgba(0, 0, 0, 0.15)',
   },
   spacing: (piwi: number) => piwi * 8,
