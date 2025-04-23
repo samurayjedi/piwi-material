@@ -20,7 +20,7 @@ const PiwiAppBar = styled.View<AppBarProps>(({ theme, color = 'primary' }) => ({
   zIndex: 5,
   width: Dimensions.get('window').width + 10,
   marginLeft: -5,
-  height: 78,
+  height: 90,
   // bottom shadow
   ...(color === 'transparent'
     ? {}
@@ -36,7 +36,7 @@ const PiwiAppBar = styled.View<AppBarProps>(({ theme, color = 'primary' }) => ({
 const PiwiStatusBar = styled.View({
   width: '100%',
   height: Constants.statusBarHeight,
-  backgroundColor: 'rgba(52, 52, 52, 0)',
+  backgroundColor: 'rgba(52, 52, 52, .4)',
 });
 
 export interface AppBarProps extends ViewProps {
@@ -54,3 +54,25 @@ export const getColor = (theme: Theme, color: AppBarProps['color']) => {
 
   return theme.palette.common.white;
 };
+
+function hexToRgb(hex: string) {
+  if (!/^#?([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+    throw new Error('Invalid hexadecimal color');
+  }
+
+  hex = hex.replace('#', '');
+
+  // when hexadecimal haver only 3 symbols, example, #fff
+  if (hex.length === 3) {
+    hex = hex
+      .split('')
+      .map((c) => c + c)
+      .join('');
+  }
+
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+
+  return { r, g, b } as const;
+}
