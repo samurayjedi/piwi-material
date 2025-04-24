@@ -1,9 +1,8 @@
 import React from 'react';
-import _ from 'lodash';
 import { ViewProps, Dimensions, View } from 'react-native';
 import Constants from 'expo-constants';
-import { Theme } from '@emotion/react';
 import styled from '@emotion/native';
+import { getColor } from './styles';
 
 export default React.forwardRef<View, AppBarProps>(
   ({ children, ...props }, ref) => {
@@ -50,41 +49,4 @@ export interface AppBarProps extends ViewProps {
     | 'secondary.dark'
     | 'secondary.light'
     | 'transparent';
-}
-
-export const getColor = (theme: Theme, color: AppBarProps['color']) => {
-  switch (color) {
-    case 'transparent':
-      return 'rgba(52, 52, 52, 0)';
-    case 'primary':
-    case 'secondary':
-      return theme.palette[color].main;
-    case 'default':
-    case undefined:
-      return theme.palette.background.default;
-  }
-
-  return _.get(theme.palette, color);
-};
-
-function hexToRgb(hex: string) {
-  if (!/^#?([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
-    throw new Error('Invalid hexadecimal color');
-  }
-
-  hex = hex.replace('#', '');
-
-  // when hexadecimal haver only 3 symbols, example, #fff
-  if (hex.length === 3) {
-    hex = hex
-      .split('')
-      .map((c) => c + c)
-      .join('');
-  }
-
-  const r = parseInt(hex.substring(0, 2), 16);
-  const g = parseInt(hex.substring(2, 4), 16);
-  const b = parseInt(hex.substring(4, 6), 16);
-
-  return { r, g, b } as const;
 }
