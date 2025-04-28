@@ -19,7 +19,8 @@ const IconButton = React.forwardRef<View, IconButtonProps>(
               if (React.isValidElement(child)) {
                 let piwi = { size, color };
                 if (ctxInput.in && ctxInput.adornment) {
-                  if (ctxInput.adornment.size) piwi = ctxInput.adornment;
+                  // remember remove the any type here in the future, changing the types color: string to color: Color in InputAdornment by example
+                  if (ctxInput.adornment.size) piwi = ctxInput.adornment as any;
                 }
                 return React.cloneElement(child, {
                   size: theme.iconButton[piwi.size],
@@ -33,6 +34,21 @@ const IconButton = React.forwardRef<View, IconButtonProps>(
                         case 'info':
                         case 'error':
                           return theme.palette[piwi.color].main;
+                        case 'error.dark':
+                        case 'error.light':
+                        case 'info.dark':
+                        case 'info.light':
+                        case 'primary.dark':
+                        case 'primary.light':
+                        case 'secondary.dark':
+                        case 'secondary.light':
+                        case 'success.dark':
+                        case 'success.light':
+                        case 'warning.dark':
+                        case 'warning.light':
+                          return _.get(theme.palette, piwi.color);
+                        case 'default':
+                          return theme.palette.background.default;
                         default:
                           return color;
                       }
@@ -54,14 +70,7 @@ export default IconButton;
 
 export interface IconButtonProps extends TouchableWithoutFeedbackProps {
   children: React.ReactNode;
-  color?:
-    | 'primary'
-    | 'secondary'
-    | 'success'
-    | 'warning'
-    | 'info'
-    | 'error'
-    | string;
+  color?: Exclude<Color, 'transparent'>;
   size?: 'small' | 'medium' | 'large';
 }
 

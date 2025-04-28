@@ -6,6 +6,9 @@ declare module '@emotion/react' {
 }
 
 declare global {
+  type HexColor = `#${string}`;
+  type RGBAColor = `rgba(${number}, ${number}, ${number}, ${number})`;
+  type RGBColor = `rgb(${number}, ${number}, ${number})`;
   type Color =
     | 'default'
     | 'primary'
@@ -26,5 +29,8 @@ declare global {
     | 'warning'
     | 'warning.dark'
     | 'warning.light'
-    | 'transparent';
+    | 'transparent'
+    | HexColor
+    | RGBAColor
+    | RGBColor;
 }
