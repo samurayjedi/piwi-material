@@ -155,7 +155,7 @@ const PiwiButton = styled.Text<{
 
 type Variants = 'contained' | 'outlined' | 'text';
 
-interface ButtonProps extends TextProps {
+export interface ButtonProps extends TextProps {
   children: string;
   color?: 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';
   variant?: Variants;
