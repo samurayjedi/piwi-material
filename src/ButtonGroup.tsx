@@ -45,7 +45,12 @@ export default function ButtonGroup({
                 }
               }
 
-              return { borderRadius: 0 };
+              return {
+                borderRadius: 0,
+                ...(orientation === 'horizontal'
+                  ? { borderLeftWidth: 0 }
+                  : { borderTopWidth: 0 }),
+              };
             })(),
           };
           return React.cloneElement(child, newProps);
