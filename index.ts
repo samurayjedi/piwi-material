@@ -4,6 +4,7 @@ import AppBar from './src/AppBar';
 import BottomNavigation from './src/BottomNavigation';
 import BottomNavigationAction from './src/BottomNavigationAction';
 import Button from './src/Button';
+import ButtonGroup from './src/ButtonGroup';
 import Dialog from './src/Dialog';
 import DialogActions from './src/DialogActions';
 import DialogContent from './src/DialogContent';
@@ -33,6 +34,7 @@ export {
   BottomNavigation,
   BottomNavigationAction,
   Button,
+  ButtonGroup,
   Dialog,
   DialogActions,
   DialogContent,
