@@ -45,7 +45,7 @@ export default function ButtonGroup({
                 }
               }
 
-              return {};
+              return { borderRadius: 0 };
             })(),
           };
           return React.cloneElement(child, newProps);
