@@ -1,7 +1,7 @@
 const { execSync } = require('child_process');
 const commitMessage = process.argv[2]; // Get commit message from npm argument
 
-console.log(`${process.argv[2]}`);
+console.log(`fuck commit message: ${process.argv[2]}`);
 if (!commitMessage) {
   console.error(
     'Error: Commit message is required. Usage: `npm run publish --commit="Your commit message"`',
