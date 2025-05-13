@@ -65,7 +65,7 @@ export default function ButtonGroup({
 
 export interface ButtonGroupProps extends Omit<ButtonProps, 'children'> {
   children: React.ReactNode;
-  orientation: 'horizontal' | 'vertical';
+  orientation?: 'horizontal' | 'vertical';
 }
 
 const Container = styled.View<ButtonGroupProps>(({ orientation }) => ({
