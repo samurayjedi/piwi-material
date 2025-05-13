@@ -35,12 +35,14 @@ export default function ButtonGroup({
                     borderRadius: 0,
                     borderTopRightRadius: 4,
                     borderBottomRightRadius: 4,
+                    borderLeftWidth: 0,
                   };
                 } else {
                   return {
                     borderRadius: 0,
                     borderBottomLeftRadius: 4,
                     borderBottomRightRadius: 4,
+                    borderTopWidth: 0,
                   };
                 }
               }
