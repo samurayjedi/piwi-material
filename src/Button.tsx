@@ -4,6 +4,7 @@ import { StyleSheet, TextProps } from 'react-native';
 import styled from '@emotion/native';
 import { useTheme } from '@emotion/react';
 import Ripple from './depend/Ripple';
+import { getColor } from './styles';
 
 export default function Button({
   children,
@@ -70,7 +71,7 @@ function Adornment({
             color: disabled
               ? theme.palette.text.disabled
               : variant === 'text'
-                ? theme.palette[color].main
+                ? getColor(theme, color)
                 : theme.palette.common.white,
             position: 'absolute',
             ...(position === 'end'
@@ -104,7 +105,7 @@ const PiwiButton = styled.Text<{
   color:
     variant === 'contained'
       ? theme.palette.common.white
-      : theme.palette[color].main,
+      : getColor(theme, color),
   zIndex: 0,
   elevation: 0,
   ...(() => {
@@ -137,11 +138,11 @@ const PiwiButton = styled.Text<{
   ...(() => {
     switch (variant) {
       case 'contained':
-        return { backgroundColor: theme.palette[color].main };
+        return { backgroundColor: getColor(theme, color) };
       case 'outlined':
         return {
           backgroundColor: 'transparent',
-          borderColor: theme.palette[color].main,
+          borderColor: getColor(theme, color),
           borderWidth: 1,
         };
       default:
@@ -157,7 +158,7 @@ type Variants = 'contained' | 'outlined' | 'text';
 
 export interface ButtonProps extends TextProps {
   children: string;
-  color?: 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';
+  color?: Color;
   variant?: Variants;
   startIcon?: JSX.Element;
   endIcon?: JSX.Element;
