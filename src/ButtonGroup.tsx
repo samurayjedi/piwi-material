@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from '@emotion/native';
-import type { ButtonProps } from './Button';
 import { useTheme } from '@emotion/react';
 import { getColor } from './styles';
+import { ButtonProps } from './Button/types';
 
 export default function ButtonGroup({
   children,

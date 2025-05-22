@@ -43,5 +43,10 @@ export const getColor = (theme: Theme, color: Color) => {
       return theme.palette.background.default;
   }
 
-  return _.get(theme.palette, color);
+  const c = _.get(theme.palette, color);
+  if (!c) {
+    throw new Error('Color not found!!!');
+  }
+
+  return c;
 };
