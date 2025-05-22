@@ -63,7 +63,7 @@ const ButtonRoot = styled.View<{
   size: NonNullable<ButtonProps['size']>;
 }>(({ theme, variant, color, size }) => ({
   position: 'relative',
-  overflow: 'hidden',
+  overflow: 'hidden', // ripple
   alignItems: 'center',
   flexDirection: 'row',
   borderRadius: 4,
