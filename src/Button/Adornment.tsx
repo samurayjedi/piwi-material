@@ -6,7 +6,7 @@ import { getColor } from '../styles';
 import { SIZE } from './consts';
 
 export default function Adornment(props: AdornmentProps) {
-  const { adornment, disabled, color, variant } = props;
+  const { adornment, disabled, color, variant, size } = props;
   const theme = useTheme();
 
   return (
@@ -14,16 +14,18 @@ export default function Adornment(props: AdornmentProps) {
       {React.Children.map(adornment, (child) => {
         if (React.isValidElement(child)) {
           const props = {
-            size: 20,
             color: disabled
               ? theme.palette.text.disabled
               : variant === 'text'
-                ? getColor(theme, color)
-                : theme.palette.common.white,
+                ? theme.palette.common.white
+                : getColor(theme, color),
             ...child.props,
+            size: SIZE(size),
           };
+
           return React.cloneElement(child, props);
         }
+
         return child;
       })}
     </StyledAdornment>
@@ -32,9 +34,9 @@ export default function Adornment(props: AdornmentProps) {
 
 const StyledAdornment = styled.View<AdornmentProps>(({ position, size }) => ({
   position: 'absolute',
-  width: SIZE(size),
+  width: SIZE(size) + 2,
   height: SIZE(size),
   overflow: 'hidden',
-  marginLeft: position === 'start' ? 3 : 0,
-  ...(position === 'end' ? { right: 0, marginRight: 3 } : {}),
+  marginLeft: position === 'start' ? SIZE(size) / 2 : 0,
+  ...(position === 'end' ? { right: 0, marginRight: SIZE(size) / 2 } : {}),
 }));

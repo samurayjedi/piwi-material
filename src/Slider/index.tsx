@@ -6,6 +6,8 @@ import { getColor, hexToRgb } from '../styles';
 import Marks from './Marks';
 import Popover from '../Popover';
 
+const clip = (v: number, min: number, max: number) =>
+  Math.max(min, Math.min(max, v));
 export default function Slider({
   color = 'primary',
   size = 'medium',
@@ -13,8 +15,11 @@ export default function Slider({
   min = 0,
   max = 100,
   marks = false,
+  onChange = () => {},
+  value = 0,
   ...props
 }: SliderProps) {
+  const valueToPercent = (v: number) => (100 * v) / (max - min);
   const parent = useRef<View>(null);
   const parentRectRef = useRef<LayoutRectangle>({
     x: 0,
@@ -31,13 +36,13 @@ export default function Slider({
   // % advanced by thumb
   const [thumbPos, setThumbPos] = useState(0); // 0%-100%
   const [x, setX] = useState(0);
-  // linear interpolation formula.
-  let value = min + (max - min) * (thumbPos / 100);
-  value = Math.floor(value);
+  // convert the percentage of the slider to a value, using linear interpolation formula.
+  let vLabel = min + (max - min) * (thumbPos / 100);
+  vLabel = Math.floor(vLabel);
   // props needed in panResponder
-  const stepP = useRef((100 * step) / (max - min));
+  const stepP = useRef(valueToPercent(step));
   useEffect(() => {
-    stepP.current = (100 * step) / (max - min);
+    stepP.current = valueToPercent(step);
   }, [min, max]);
   // popover
   const [open, setOpen] = useState(false);
@@ -52,7 +57,7 @@ export default function Slider({
         if (parent.current) {
           const x = e.nativeEvent.pageX - parentRectRef.current.x;
           let newPos = (x / sliderRectRef.current.width) * 100;
-          newPos = Math.max(0, Math.min(100, newPos)); // Clamp between 0-100
+          newPos = clip(newPos, 0, 100); // Clamp between 0-100
           newPos = Math.round(newPos);
           // advance % of the thumb by step
           let steps = 0;
@@ -60,11 +65,13 @@ export default function Slider({
             steps = stepP.current * i;
           }
           setThumbPos(steps);
-          const xPopper = Math.max(
+          onChange(steps);
+          const xp = clip(
+            x,
             sliderRectRef.current.x,
-            Math.min(sliderRectRef.current.x + sliderRectRef.current.width, x),
+            sliderRectRef.current.x + sliderRectRef.current.width,
           );
-          setX(xPopper);
+          setX(xp);
         }
       },
       onPanResponderRelease: () => {
@@ -95,7 +102,7 @@ export default function Slider({
           y: parentRectRef.current.y - 50,
         }}
       >
-        {value}
+        {vLabel}
       </Popover>
       <Track
         size={size}
@@ -160,6 +167,8 @@ export interface SliderProps extends ViewProps {
   min?: number;
   max?: number;
   marks?: boolean;
+  value?: number;
+  onChange?: (v: number) => void;
 }
 
 interface Props {

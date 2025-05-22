@@ -111,28 +111,15 @@ const ButtonRoot = styled.View<{
 }));
 
 const PiwiButton = styled.Text<PiwiButtonProps>(
-  ({ theme, variant, size, color, haveStartIcon, haveEndIcon }) => {
-    const factor = (() => {
-      switch (size) {
-        case 'small':
-          return 1.2;
-        case 'large':
-          return 1.4;
-      }
-
-      return 2;
-    })();
-
-    return {
-      ...theme.typography.button,
-      color:
-        variant === 'contained'
-          ? theme.palette.common.white
-          : getColor(theme, color),
-      paddingLeft: haveStartIcon ? SIZE(size) / factor : 0,
-      paddingRight: haveEndIcon ? SIZE(size) / factor : 0,
-    };
-  },
+  ({ theme, variant, size, color, haveStartIcon, haveEndIcon }) => ({
+    ...theme.typography.button,
+    color:
+      variant === 'contained'
+        ? theme.palette.common.white
+        : getColor(theme, color),
+    paddingLeft: haveStartIcon ? SIZE(size) + 5 : 0,
+    paddingRight: haveEndIcon ? SIZE(size) + 5 : 0,
+  }),
 );
 
 interface PiwiButtonProps
