@@ -26,6 +26,8 @@ import TableRow from './src/TableRow';
 import TextField from './src/TextField';
 import Toolbar from './src/Toolbar';
 import Typography from './src/Typography';
+import Slider from './src/Slider';
+import Popover from './src/Popover';
 
 export {
   theme,
@@ -56,4 +58,6 @@ export {
   TextField,
   Toolbar,
   Typography,
+  Slider,
+  Popover,
 };
