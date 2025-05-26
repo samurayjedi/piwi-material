@@ -5,9 +5,8 @@ import { ViewProps } from 'react-native-svg/lib/typescript/fabric/utils';
 import { getColor, hexToRgb } from '../styles';
 import Marks from './Marks';
 import Popover from '../Popover';
+import { clamp, percentToValue, valueToPercent } from '../utils';
 
-const clip = (v: number, min: number, max: number) =>
-  Math.max(min, Math.min(max, v));
 export default function Slider({
   color = 'primary',
   size = 'medium',
@@ -19,7 +18,6 @@ export default function Slider({
   value = 0,
   ...props
 }: SliderProps) {
-  const valueToPercent = (v: number) => (100 * v) / (max - min);
   const parent = useRef<View>(null);
   const parentRectRef = useRef<LayoutRectangle>({
     x: 0,
@@ -37,13 +35,12 @@ export default function Slider({
   const [thumbPos, setThumbPos] = useState(0); // 0%-100%
   const [x, setX] = useState(0);
   // convert the percentage of the slider to a value, using linear interpolation formula.
-  let vLabel = min + (max - min) * (thumbPos / 100);
-  vLabel = Math.floor(vLabel);
-  // props needed in panResponder
-  const stepP = useRef(valueToPercent(step));
+  const vLabel = Math.floor(percentToValue(thumbPos, min, max));
+  // how much % of slider filled the step value represents
+  const stepP = useRef(valueToPercent(step, min, max));
   useEffect(() => {
-    stepP.current = valueToPercent(step);
-  }, [min, max]);
+    stepP.current = valueToPercent(step, min, max);
+  }, [step, min, max]);
   // popover
   const [open, setOpen] = useState(false);
 
@@ -57,7 +54,7 @@ export default function Slider({
         if (parent.current) {
           const x = e.nativeEvent.pageX - parentRectRef.current.x;
           let newPos = (x / sliderRectRef.current.width) * 100;
-          newPos = clip(newPos, 0, 100); // Clamp between 0-100
+          newPos = clamp(newPos, 0, 100); // Clamp between 0-100
           newPos = Math.round(newPos);
           // advance % of the thumb by step
           let steps = 0;
@@ -66,7 +63,7 @@ export default function Slider({
           }
           setThumbPos(steps);
           onChange(steps);
-          const xp = clip(
+          const xp = clamp(
             x,
             sliderRectRef.current.x,
             sliderRectRef.current.x + sliderRectRef.current.width,

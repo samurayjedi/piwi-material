@@ -12,7 +12,7 @@ import DrawerOverlay, { OverlayInterface, OverlayProps } from './Overlay';
 import Items from './Items';
 
 export default React.forwardRef<Ref, DrawerProps>(
-  ({ open, items, effect = 3, colors, onItemSelected, ...props }, ref) => {
+  ({ open, effect = 3, colors, onItemSelected, children, ...props }, ref) => {
     const overlayRef = useRef<OverlayInterface>(null);
     const [display, setDisplay] = useState(false);
 
@@ -49,12 +49,9 @@ export default React.forwardRef<Ref, DrawerProps>(
           />
           <Content>
             <Glue />
-            <Items
-              open={open}
-              items={items}
-              effect={effect}
-              onItemSelected={onItemSelected}
-            />
+            <Items open={open} effect={effect} onItemSelected={onItemSelected}>
+              {children}
+            </Items>
             <Glue />
           </Content>
         </Wrapper>
@@ -65,11 +62,11 @@ export default React.forwardRef<Ref, DrawerProps>(
 
 export interface DrawerProps extends ViewProps {
   open: boolean;
-  items: [string, string][];
   onClose?: () => void;
   effect?: OverlayProps['effect'];
   colors: OverlayProps['colors'];
-  onItemSelected?: (v: [string, string], i: number) => void;
+  onItemSelected?: (i: number) => void;
+  children: React.ReactNode;
 }
 
 const Root = styled.View<{ display: boolean }>(({ display }) => ({
@@ -91,7 +88,7 @@ const Wrapper = styled.View({
 const Content = styled.View({
   width: '100%',
   height: '100%',
-  alignItems: 'center',
+  alignItems: 'stretch',
   justifyContent: 'center',
   paddingTop: Constants.statusBarHeight,
 });

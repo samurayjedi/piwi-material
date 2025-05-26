@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
+import _ from 'lodash';
 import styled from '@emotion/native';
 import { useSprings, animated, config } from '@react-spring/native';
 import {
@@ -10,12 +11,13 @@ import type { DrawerProps } from '.';
 
 export default function Items({
   open,
-  items,
   effect,
   onItemSelected,
+  children,
 }: ItemsProps) {
+  const id = useMemo(() => _.uniqueId('drawer-items-'), []);
   const [springs, api] = useSprings(
-    items.length,
+    React.Children.count(children),
     (i) => {
       switch (effect) {
         case 1:
@@ -61,9 +63,12 @@ export default function Items({
 
   return (
     <>
-      {springs.map((spring, i) => {
-        const v = spring as any;
-        const [key, label] = items[i];
+      {React.Children.map(children, (child, i) => {
+        if (!React.isValidElement(child)) {
+          return null;
+        }
+        const key = `${id}-${i}`;
+        const v = springs[i] as any;
 
         return (
           <animated.View
@@ -108,8 +113,8 @@ export default function Items({
               }
             })()}
           >
-            <Item item={items[i]} index={i} onItemSelected={onItemSelected}>
-              {label}
+            <Item index={i} onItemSelected={onItemSelected}>
+              {child}
             </Item>
           </animated.View>
         );
@@ -120,7 +125,6 @@ export default function Items({
 
 function Item({
   children,
-  item,
   index,
   onPress,
   onItemSelected,
@@ -133,7 +137,7 @@ function Item({
       }
 
       if (onItemSelected) {
-        onItemSelected(item, index);
+        onItemSelected(index);
       }
     },
     [onPress, onItemSelected],
@@ -141,28 +145,19 @@ function Item({
 
   return (
     <TouchableWithoutFeedback onPress={press} {...props}>
-      <MenuItem>{children}</MenuItem>
+      {children}
     </TouchableWithoutFeedback>
   );
 }
 
 export interface ItemsProps {
   open: boolean;
-  items: DrawerProps['items'];
   effect: DrawerProps['effect'];
   onItemSelected?: ItemProps['onItemSelected'];
+  children: React.ReactNode;
 }
 
 interface ItemProps extends TouchableWithoutFeedbackProps {
-  item: DrawerProps['items'][number];
   index: number;
   onItemSelected?: DrawerProps['onItemSelected'];
 }
-
-const MenuItem = styled.Text(({ theme }) => ({
-  ...theme.typography.h3,
-  color: theme.palette.common.white,
-  letterSpacing: 1,
-  textTransform: 'uppercase',
-  paddingBottom: theme.spacing(2),
-}));
