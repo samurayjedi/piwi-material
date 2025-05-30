@@ -16,6 +16,7 @@ export default function Slider({
   marks = false,
   onChange = () => {},
   value = 0,
+  valueLabelDisplay = false,
   ...props
 }: SliderProps) {
   const parent = useRef<View>(null);
@@ -50,7 +51,7 @@ export default function Slider({
           newPos = clamp(newPos, 0, 100); // Clamp between 0-100
           newPos = Math.round(newPos / stepP.current) * stepP.current;
           setThumbPos(newPos);
-          onChange(newPos);
+          onChange(Math.round(percentToValue(newPos, min, max)));
           if (popperRef.current) {
             const popperWidth = popperRef.current.getRect().width;
             let xPopover = parentRectRef.current.x;
@@ -81,17 +82,19 @@ export default function Slider({
         }
       }}
     >
-      <Popover
-        ref={popperRef}
-        open={open}
-        anchors={{
-          x,
-          y: parentRectRef.current?.y ?? 0,
-        }}
-      >
-        {/* convert the percentage of the slider to a value, using linear interpolation formula. */}
-        {Math.round(percentToValue(thumbPos, min, max))}
-      </Popover>
+      {valueLabelDisplay && (
+        <Popover
+          ref={popperRef}
+          open={open}
+          anchors={{
+            x,
+            y: parentRectRef.current?.y ?? 0,
+          }}
+        >
+          {/* convert the percentage of the slider to a value, using linear interpolation formula. */}
+          {Math.round(percentToValue(thumbPos, min, max))}
+        </Popover>
+      )}
       <Track size={size} {...panResponder.panHandlers}>
         <Filled value={thumbPos} color={color} />
         <Thumb value={thumbPos} color={color} />
@@ -150,6 +153,7 @@ export interface SliderProps extends ViewProps {
   max?: number;
   marks?: boolean;
   value?: number;
+  valueLabelDisplay?: boolean;
   onChange?: (v: number) => void;
 }
 
