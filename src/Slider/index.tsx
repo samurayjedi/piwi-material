@@ -4,7 +4,7 @@ import { View, PanResponder, LayoutRectangle } from 'react-native';
 import { ViewProps } from 'react-native-svg/lib/typescript/fabric/utils';
 import { getColor, hexToRgb } from '../styles';
 import Marks from './Marks';
-import Popover from '../Popover';
+import Popover, { PopoverRef } from '../Popover';
 import { clamp, percentToValue, valueToPercent } from '../utils';
 
 export default function Slider({
@@ -19,31 +19,24 @@ export default function Slider({
   ...props
 }: SliderProps) {
   const parent = useRef<View>(null);
-  const parentRectRef = useRef<LayoutRectangle>({
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0,
-  });
-  const sliderRectRef = useRef<LayoutRectangle>({
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0,
-  });
+  const parentRectRef = useRef<LayoutRectangle | null>(null);
   // % advanced by thumb
-  const [thumbPos, setThumbPos] = useState(0); // 0%-100%
+  const [thumbPos, setThumbPos] = useState(
+    valueToPercent(value - min, min, max),
+  ); // 0%-100%
+  useEffect(() => {
+    setThumbPos(valueToPercent(value - min, min, max));
+  }, [value]);
   const [x, setX] = useState(0);
-  // convert the percentage of the slider to a value, using linear interpolation formula.
-  const vLabel = Math.floor(percentToValue(thumbPos, min, max));
-  // how much % of slider filled the step value represents
+  // % by step
   const stepP = useRef(valueToPercent(step, min, max));
   useEffect(() => {
     stepP.current = valueToPercent(step, min, max);
   }, [step, min, max]);
   // popover
+  const popperRef = useRef<PopoverRef | null>(null);
   const [open, setOpen] = useState(false);
-
+  /** panResponder */
   const panResponder = useRef(
     PanResponder.create({
       onPanResponderGrant: () => {
@@ -51,24 +44,20 @@ export default function Slider({
       },
       onStartShouldSetPanResponder: () => true,
       onPanResponderMove: (e, gestureState) => {
-        if (parent.current) {
+        if (parentRectRef.current) {
           const x = e.nativeEvent.pageX - parentRectRef.current.x;
-          let newPos = (x / sliderRectRef.current.width) * 100;
+          let newPos = (x / parentRectRef.current.width) * 100;
           newPos = clamp(newPos, 0, 100); // Clamp between 0-100
-          newPos = Math.round(newPos);
-          // advance % of the thumb by step
-          let steps = 0;
-          for (let i = 1; steps < newPos; i++) {
-            steps = stepP.current * i;
+          newPos = Math.round(newPos / stepP.current) * stepP.current;
+          setThumbPos(newPos);
+          onChange(newPos);
+          if (popperRef.current) {
+            const popperWidth = popperRef.current.getRect().width;
+            let xPopover = parentRectRef.current.x;
+            xPopover += parentRectRef.current.width * (newPos / 100);
+            xPopover = xPopover - popperWidth;
+            setX(xPopover);
           }
-          setThumbPos(steps);
-          onChange(steps);
-          const xp = clamp(
-            x,
-            sliderRectRef.current.x,
-            sliderRectRef.current.x + sliderRectRef.current.width,
-          );
-          setX(xp);
         }
       },
       onPanResponderRelease: () => {
@@ -93,21 +82,17 @@ export default function Slider({
       }}
     >
       <Popover
+        ref={popperRef}
         open={open}
         anchors={{
           x,
-          y: parentRectRef.current.y - 50,
+          y: parentRectRef.current?.y ?? 0,
         }}
       >
-        {vLabel}
+        {/* convert the percentage of the slider to a value, using linear interpolation formula. */}
+        {Math.round(percentToValue(thumbPos, min, max))}
       </Popover>
-      <Track
-        size={size}
-        onLayout={(event) => {
-          sliderRectRef.current = event.nativeEvent.layout;
-        }}
-        {...panResponder.panHandlers}
-      >
+      <Track size={size} {...panResponder.panHandlers}>
         <Filled value={thumbPos} color={color} />
         <Thumb value={thumbPos} color={color} />
         {marks && (
